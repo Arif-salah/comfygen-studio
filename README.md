@@ -36,7 +36,7 @@ Open the following two workflows in ComfyUI to ensure all necessary nodes are av
 - `base_workflow`
 - `base_workflow2`
 
-You can find them inside the `js` folder. Just open them—no need to edit. and install any missing nodes.
+You can find them inside the `js` folder. Just open them—no need to edit. just install any missing nodes.
 
 ---
 
