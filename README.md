@@ -1,6 +1,6 @@
 # ComfyGen – Simple WebUI for ComfyUI (Mobile-Friendly)
 
-![ComfyGen Preview](assets/screenshot.png)
+![ComfyGen Preview](assets/screenshot.jpg)
 
 A clean and minimal WebUI built for [ComfyUI](https://github.com/comfyanonymous/ComfyUI), focused on **mobile usability** and **ease of use**.  
 This project was developed for personal workflow needs, but feel free to try it out, improve it, or contribute!
