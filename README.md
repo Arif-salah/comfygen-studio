@@ -36,7 +36,7 @@ Open the following two workflows in ComfyUI to ensure all necessary nodes are av
 - `base_workflow`
 - `base_workflow2`
 
-You can find them inside the `js` folder. Just open them—no need to edit. ComfyUI will automatically update any missing nodes.
+You can find them inside the `js` folder. Just open them—no need to edit. and install any missing nodes.
 
 ---
 
@@ -84,7 +84,7 @@ Or replace `127.0.0.1` with your local IP if accessing from another device.
 
 ## ⚠️ Known Issue (LoRA Bug)
 
-Due to a bug I haven’t fixed yet, you **must add a LoRA node** in your workflow—even if you don’t plan to use one.
+Due to a bug I haven’t fixed yet, you **must add a LoRA ** even if you don’t plan to use one.
 
 **Workaround:**  
 Just add the LoRA and set its **slider to `0`** to disable it.
