@@ -1,0 +1,885 @@
+/* General Page Styles (Applies to all devices) */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%; /* Ensure html takes full viewport height */
+}
+
+body {
+    background-color: #000;
+    color: #f0f0f0;
+    font-family: 'Inter', sans-serif; /* Changed to Inter as per instructions */
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    min-height: 100vh;
+    height: 100%; /* Ensure body takes full height of html */
+    display: flex;
+    flex-direction: column; /* Ensure body is a flex container for header/main/footer */
+    overflow-y: auto; /* Explicitly enable vertical scrolling for body */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Header Styles */
+.app-header {
+    background-color: #1a1a1a;
+    padding: 15px 20px;
+    border-bottom: 1px solid #c00;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    position: sticky; /* Make header sticky */
+    top: 0;
+    z-index: 100; /* Ensure header stays on top */
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.app-logo {
+    font-size: 1.8em;
+    color: #c00;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.theme-toggle {
+    background: none;
+    border: 2px solid #c00;
+    color: #c00;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.theme-toggle:hover {
+    background-color: #c00;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(192, 0, 0, 0.6);
+}
+
+/* Main Layout */
+.main-layout {
+    display: grid; /* Use CSS Grid for desktop layout */
+    grid-template-columns: minmax(380px, 480px) 1fr; /* Left column flexible, right column takes remaining space */
+    gap: 30px; /* Increased space between columns */
+    padding: 20px;
+    max-width: 1600px; /* Increased max width for the entire layout */
+    margin: 0 auto;
+    flex-grow: 1; /* Allow main content to grow */
+    align-items: start; /* Align grid items to the start of their cells */
+}
+
+/* Controls Panel (Left Side) */
+.controls-panel {
+    grid-column: 1; /* Place in the first column */
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Increased space between control groups */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Image Display Area (Right Side) */
+.image-display-area {
+    grid-column: 2; /* Place in the second column */
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: sticky; /* Make image container sticky */
+    top: 80px; /* Adjust this value based on header height + desired top margin */
+    align-self: start; /* Important for sticky positioning in grid container */
+    height: fit-content; /* Ensure it only takes height needed for its content */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.image-frame {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Hide overflow if image is larger than frame */
+    position: relative;
+    border-radius: 8px; /* Rounded corners for the image frame */
+}
+
+.generated-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Ensures the image fits within the frame */
+    border-radius: 6px; /* Slightly smaller rounded corners for the image itself */
+}
+
+.image-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1.2em;
+    border-radius: 8px;
+    z-index: 50;
+    display: none; /* Hidden by default */
+}
+
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #c00;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+/* Form Section Styling */
+.control-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0; /* Removed default margin-bottom to rely on parent gap */
+}
+
+.control-label {
+    font-size: 0.9em;
+    color: #ccc;
+    margin-bottom: 5px;
+    text-align: left;
+    font-weight: 500;
+}
+
+.text-input,
+.select-input,
+.seed-input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #444;
+    border-radius: 6px;
+    background-color: #2a2a2a;
+    color: #f0f0f0;
+    font-size: 0.9em;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.text-input:focus,
+.select-input:focus,
+.seed-input:focus {
+    border-color: #c00;
+    box-shadow: 0 0 5px rgba(192, 0, 0, 0.5);
+    outline: none;
+}
+
+textarea {
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 60px;
+    max-height: 150px;
+}
+
+/* Input with Buttons (e.g., Seed) */
+.input-with-buttons {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.input-with-buttons .text-input {
+    flex-grow: 1;
+    width: auto; /* Override 100% width for flex item */
+}
+
+.action-button {
+    background-color: #333;
+    color: #f0f0f0;
+    border: 1px solid #555;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8em;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap; /* Prevent button text from wrapping */
+}
+
+.action-button:hover {
+    background-color: #c00;
+    border-color: #c00;
+    color: #fff;
+}
+
+.action-button:disabled {
+    background-color: #444;
+    border-color: #666;
+    color: #999;
+    cursor: not-allowed;
+}
+
+.small-button {
+    padding: 6px 10px;
+    font-size: 0.75em;
+}
+
+.add-button {
+    background-color: #007bff; /* Blue for add */
+    border-color: #007bff;
+    color: #fff;
+    margin-top: 10px;
+    align-self: flex-start; /* Align to start of controls panel */
+}
+
+.add-button:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.remove-button {
+    background-color: #dc3545; /* Red for remove */
+    border-color: #dc3545;
+    color: #fff;
+    margin-left: 10px; /* Space from LoRA fields */
+    align-self: flex-end; /* Align to end of its flex row */
+}
+
+.remove-button:hover {
+    background-color: #c82333;
+    border-color: #c82333;
+}
+
+/* Auto Seed Button Active State */
+#autoRandomSeed.active {
+    background-color: #c00; /* Red when active */
+    border-color: #c00;
+    color: #fff;
+}
+
+#autoRandomSeed.active:hover {
+    background-color: #e00; /* Slightly darker red on hover when active */
+    border-color: #e00;
+}
+
+
+/* Toggle Switch */
+.toggle-switch-container {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+    margin-top: 5px; /* Space below label */
+}
+
+.toggle-switch-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 20px; /* Make it round */
+}
+
+.toggle-switch-slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%; /* Make the circle round */
+}
+
+.toggle-switch-input:checked + .toggle-switch-slider {
+    background-color: #c00; /* Red when checked */
+}
+
+.toggle-switch-input:focus + .toggle-switch-slider {
+    box-shadow: 0 0 1px #c00;
+}
+
+.toggle-switch-input:checked + .toggle-switch-slider:before {
+    transform: translateX(20px);
+}
+
+/* Grid Layouts */
+.grid-2-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px; /* Space between grid items */
+    margin-bottom: 0; /* Removed default margin-bottom to rely on parent gap */
+}
+
+/* Accordion Panel (Details/Summary) */
+.accordion-panel {
+    background-color: #2a2a2a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    margin-bottom: 0; /* Removed default margin-bottom to rely on parent gap */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.accordion-summary {
+    background-color: #3a3a3a;
+    color: #f0f0f0;
+    padding: 12px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95em;
+    list-style: none; /* Remove default marker */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.accordion-summary::-webkit-details-marker {
+    display: none; /* Hide default marker for webkit browsers */
+}
+
+.accordion-summary:hover {
+    background-color: #4a4a4a;
+}
+
+.accordion-summary::after {
+    content: '\25BC'; /* Down arrow */
+    font-size: 0.8em;
+    transition: transform 0.2s ease;
+}
+
+.accordion-panel[open] .accordion-summary::after {
+    content: '\25B2'; /* Up arrow */
+    transform: rotate(180deg);
+}
+
+.accordion-content {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    /* Optional: Add a subtle border-top if needed */
+    /* border-top: 1px solid #444; */
+}
+
+.nested-accordion {
+    border: 1px dashed #555; /* Dotted border for nested options */
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 10px;
+}
+
+/* Slider Specifics */
+.slider-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 5px; /* Space below label */
+}
+
+input[type="range"] {
+    flex-grow: 1;
+    -webkit-appearance: none; /* Override default appearance */
+    height: 8px;
+    background: #555;
+    border-radius: 5px;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity .2s;
+}
+
+input[type="range"]:hover {
+    opacity: 1;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #c00;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(192, 0, 0, 0.7);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #c00;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(192, 0, 0, 0.7);
+}
+
+.slider-value {
+    font-size: 0.85em;
+    color: #f0f0f0;
+    min-width: 35px; /* Ensure space for value */
+    text-align: right;
+}
+
+/* Custom Resolution Inputs */
+.custom-inputs-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.custom-res-input {
+    flex: 1;
+}
+
+.x-separator {
+    color: #ccc;
+    font-size: 0.9em;
+}
+
+/* LoRA Fields */
+.lora-field-row {
+    display: flex;
+    align-items: flex-end; /* Align select/slider with button at the bottom */
+    gap: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #444; /* Separator for each LoRA */
+}
+
+.lora-field-row:last-child {
+    border-bottom: none; /* No border for the last one */
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.lora-field-row .control-group {
+    flex-grow: 1;
+    margin-bottom: 0; /* Remove default margin for nested control-group */
+}
+
+.lora-select {
+    margin-bottom: 5px; /* Space between select and slider */
+}
+
+.no-loras-message {
+    font-size: 0.9em;
+    color: #888;
+    text-align: center;
+    padding: 10px;
+    border: 1px dashed #555;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+/* Primary Generate Button */
+.primary-button {
+    background-color: #c00;
+    color: #fff;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    margin-top: 0; /* Removed default margin-top to rely on parent gap */
+    box-shadow: 0 4px 10px rgba(192, 0, 0, 0.4);
+}
+
+.primary-button:hover {
+    background-color: #e00;
+    box-shadow: 0 6px 15px rgba(192, 0, 0, 0.6);
+}
+
+.primary-button:disabled {
+    background-color: #666;
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+/* Progress Bar */
+.progress-status {
+    width: 100%;
+    margin-top: 0; /* Removed default margin-top to rely on parent gap */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 5px;
+    overflow: hidden; /* Hide the default border */
+}
+
+.progress-bar::-webkit-progress-bar {
+    background-color: #333;
+    border-radius: 5px;
+}
+
+.progress-bar::-webkit-progress-value {
+    background-color: #c00;
+    border-radius: 5px;
+    transition: width 0.3s ease;
+}
+
+.progress-bar::-moz-progress-bar {
+    background-color: #c00;
+    border-radius: 5px;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 0.85em;
+    color: #aaa;
+}
+
+/* Footer */
+.app-footer {
+    background-color: #1a1a1a;
+    padding: 15px 20px;
+    margin-top: auto; /* Push footer to the bottom */
+    border-top: 1px solid #333;
+    color: #888;
+    font-size: 0.8em;
+}
+
+.app-footer .container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Theme specific styles */
+body.light-mode {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+body.light-mode .app-header {
+    background-color: #fff;
+    border-bottom-color: #ddd;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .app-logo {
+    color: #c00;
+}
+
+body.light-mode .theme-toggle {
+    border-color: #c00;
+    color: #c00;
+}
+
+body.light-mode .theme-toggle:hover {
+    background-color: #c00;
+    color: #fff;
+}
+
+body.light-mode .controls-panel,
+body.light-mode .image-display-area,
+body.light-mode .accordion-panel {
+    background-color: #fff;
+    border-color: #e0e0e0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .control-label {
+    color: #555;
+}
+
+body.light-mode .text-input,
+body.light-mode .select-input,
+body.light-mode .seed-input {
+    background-color: #f8f8f8;
+    border-color: #ddd;
+    color: #333;
+}
+
+body.light-mode .text-input:focus,
+body.light-mode .select-input:focus,
+body.light-mode .seed-input:focus {
+    border-color: #c00;
+    box-shadow: 0 0 5px rgba(192, 0, 0, 0.3);
+}
+
+body.light-mode .action-button {
+    background-color: #eee;
+    border-color: #ccc;
+    color: #555;
+}
+
+body.light-mode .action-button:hover {
+    background-color: #c00;
+    border-color: #c00;
+    color: #fff;
+}
+
+body.light-mode .action-button:disabled {
+    background-color: #ddd;
+    border-color: #bbb;
+    color: #999;
+}
+
+body.light-mode .add-button {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+}
+
+body.light-mode .add-button:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+body.light-mode .remove-button {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+}
+
+body.light-mode .remove-button:hover {
+    background-color: #c82333;
+    border-color: #c82333;
+}
+
+body.light-mode #autoRandomSeed.active {
+    background-color: #c00; /* Red when active */
+    border-color: #c00;
+    color: #fff;
+}
+
+body.light-mode #autoRandomSeed.active:hover {
+    background-color: #e00; /* Slightly darker red on hover when active */
+    border-color: #e00;
+}
+
+body.light-mode .toggle-switch-slider {
+    background-color: #bbb;
+}
+
+body.light-mode .toggle-switch-input:checked + .toggle-switch-slider {
+    background-color: #c00;
+}
+
+body.light-mode .accordion-summary {
+    background-color: #e8e8e8;
+    color: #333;
+}
+
+body.light-mode .accordion-summary:hover {
+    background-color: #d8d8d8;
+}
+
+body.light-mode .accordion-content {
+    border-top-color: #eee;
+}
+
+body.light-mode .nested-accordion {
+    border-color: #ccc;
+}
+
+body.light-mode input[type="range"] {
+    background: #ccc;
+}
+
+body.light-mode input[type="range"]::-webkit-slider-thumb,
+body.light-mode input[type="range"]::-moz-range-thumb {
+    background: #c00;
+}
+
+body.light-mode .slider-value {
+    color: #333;
+}
+
+body.light-mode .x-separator {
+    color: #555;
+}
+
+body.light-mode .lora-field-row {
+    border-bottom-color: #eee;
+}
+
+body.light-mode .no-loras-message {
+    color: #777;
+    border-color: #ccc;
+}
+
+body.light-mode .primary-button {
+    background-color: #c00;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(192, 0, 0, 0.2);
+}
+
+body.light-mode .primary-button:hover {
+    background-color: #e00;
+    box-shadow: 0 6px 15px rgba(192, 0, 0, 0.4);
+}
+
+body.light-mode .primary-button:disabled {
+    background-color: #aaa;
+}
+
+body.light-mode .progress-bar::-webkit-progress-bar {
+    background-color: #e0e0e0;
+}
+
+body.light-mode .progress-bar::-webkit-progress-value {
+    background-color: #c00;
+}
+
+body.light-mode .progress-bar::-moz-progress-bar {
+    background-color: #c00;
+}
+
+body.light-mode .progress-text {
+    color: #666;
+}
+
+body.light-mode .app-footer {
+    background-color: #fff;
+    border-top-color: #e0e0e0;
+    color: #777;
+}
+
+/* ComfyUI Connection Status */
+.comfyui-connection-section {
+    margin-bottom: 0; /* Removed default margin-bottom to rely on parent gap */
+    padding-bottom: 15px;
+    border-bottom: 1px solid #333;
+}
+
+body.light-mode .comfyui-connection-section {
+    border-bottom: 1px solid #ddd;
+}
+
+.connection-status {
+    font-size: 0.9em;
+    font-weight: 500;
+    margin-top: 10px;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 5px;
+}
+
+/* Responsive Adjustments */
+@media (min-width: 769px) {
+    /* Desktop-specific styles */
+    .main-layout {
+        grid-template-columns: minmax(380px, 480px) 1fr; /* Flexible width for controls, rest for image */
+        justify-content: start; /* Align content to the start */
+    }
+
+    .controls-panel {
+        order: unset; /* Reset order for desktop */
+        width: auto; /* Let grid handle width */
+        min-width: unset;
+        max-width: unset;
+    }
+
+    .image-display-area {
+        order: unset; /* Reset order for desktop */
+        position: sticky; /* Keep sticky on desktop */
+        top: 80px; /* Adjust based on header height */
+        align-self: start; /* Crucial for sticky in grid */
+        height: fit-content;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Mobile-specific styles (stack columns) */
+    .main-layout {
+        flex-direction: column; /* Stack columns on small screens */
+        padding: 10px;
+        gap: 15px;
+        display: flex; /* Revert to flexbox for mobile stacking */
+    }
+
+    .controls-panel,
+    .image-display-area {
+        min-width: unset; /* Remove min-width constraint */
+        max-width: 100%; /* Take full width */
+        width: 100%; /* Ensure full width */
+        position: static; /* Remove sticky for small screens */
+        align-self: auto; /* Reset align-self */
+        max-height: unset; /* Reset max-height */
+    }
+
+    .image-display-area {
+        order: -1; /* Place image above controls on mobile */
+    }
+
+    .grid-2-col {
+        grid-template-columns: 1fr; /* Stack grid items on small screens */
+    }
+
+    .input-with-buttons {
+        flex-wrap: wrap; /* Allow buttons to wrap */
+    }
+
+    .input-with-buttons .text-input {
+        width: 100%; /* Full width for input */
+        margin-bottom: 5px; /* Space below input */
+    }
+
+    .input-with-buttons button {
+        flex-grow: 1; /* Allow buttons to grow */
+    }
+
+    .lora-field-row {
+        flex-direction: column; /* Stack LoRA select/slider/button */
+        align-items: flex-start;
+    }
+
+    .lora-field-row .control-group {
+        width: 100%;
+    }
+
+    .lora-field-row .remove-button {
+        align-self: flex-start; /* Align remove button to start */
+        margin-left: 0;
+        margin-top: 10px;
+    }
+}

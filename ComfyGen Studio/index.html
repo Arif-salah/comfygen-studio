@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ComfyGen Studio - Professional Image Generation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/comfygen/css/comfygen.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="container header-content">
+            <h1 class="app-logo">ComfyGen Studio</h1>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark/light mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main-layout container">
+        <aside class="controls-panel">
+            <!-- Generate Image Button - Moved to top -->
+            <button id="generateImageButton" class="primary-button" style="order: -5;">Generate Image</button>
+            <div class="progress-status" style="order: -4;">
+                <progress id="mainProgressBar" class="progress-bar" value="0" max="100"></progress>
+                <span id="progressText" class="progress-text">Ready</span>
+            </div>
+
+            <!-- ComfyUI Server Address - Moved above Seed/Checkpoint -->
+            <section class="control-group comfyui-connection-section" style="order: -3;">
+                <label for="comfyUiAddress" class="control-label">ComfyUI Server Address (IP:Port)</label>
+                <div class="input-with-buttons">
+                    <input type="text" id="comfyUiAddress" class="text-input" placeholder="e.g., 192.168.1.252:8188" value="192.168.1.252:8188">
+                    <button id="connectComfyUiButton" class="action-button small-button">Connect</button>
+                </div>
+                <p id="connectionStatus" class="connection-status">Disconnected</p>
+            </section>
+
+            <section class="control-group" style="order: -2;">
+                <label for="subjectPrompt" class="control-label">Subject / Body</label>
+                <textarea id="subjectPrompt" class="text-input" rows="3" placeholder="e.g., a muscular man, a graceful woman, a futuristic robot"></textarea>
+            </section>
+
+            <section class="control-group" style="order: -1;">
+                <label for="clothingPrompt" class="control-label">Clothing / Style</label>
+                <textarea id="clothingPrompt" class="text-input" rows="3" placeholder="e.g., wearing a cyberpunk jacket, in a flowing silk dress, armored plates"></textarea>
+            </section>
+
+            <section class="control-group">
+                <label for="qualityTags" class="control-label">Quality & Style Tags</label>
+                <textarea id="qualityTags" class="text-input" rows="3" placeholder="(masterpiece, best quality, ultra-detailed, 8k), incredibly_absurdres, highres, cinematic lighting"></textarea>
+            </section>
+
+            <section class="control-group">
+                <label for="negativePrompt" class="control-label">Negative Prompt</label>
+                <textarea id="negativePrompt" class="text-input" rows="3" placeholder="(low quality, worst quality:1.4), (monochrome, grayscale:1.2), bad anatomy, deformed, blurry"></textarea>
+            </section>
+
+            <div class="grid-2-col">
+                <section class="control-group">
+                    <label for="seed" class="control-label">Seed</label>
+                    <div class="input-with-buttons">
+                        <input type="number" id="seed" value="123456" class="text-input seed-input">
+                        <button id="randomSeedButton" class="action-button small-button">Rand</button>
+                        <button id="autoRandomSeed" class="action-button small-button">Auto</button>
+                    </div>
+                </section>
+
+                <section class="control-group">
+                    <label for="ckpt_name" class="control-label">Checkpoint Model</label>
+                    <select id="ckpt_name" class="select-input">
+                        <option disabled selected>Loading...</option>
+                    </select>
+                </section>
+            </div>
+            
+            <div class="grid-2-col">
+                <section class="control-group">
+                    <label for="upscaleToggle" class="control-label">Upscale Image</label>
+                    <label class="toggle-switch-container">
+                        <input type="checkbox" id="upscaleToggle" class="toggle-switch-input">
+                        <span class="toggle-switch-slider"></span>
+                    </label>
+                </section>
+                <section class="control-group">
+                    <label for="faceDetailerToggle" class="control-label">Face Detailer</label>
+                    <label class="toggle-switch-container">
+                        <input type="checkbox" id="faceDetailerToggle" class="toggle-switch-input">
+                        <span class="toggle-switch-slider"></span>
+                    </label>
+                </section>
+            </div>
+
+            <details class="accordion-panel">
+                <summary class="accordion-summary">Generation Settings</summary>
+                <div class="accordion-content">
+                    <div class="grid-2-col">
+                        <section class="control-group">
+                            <label for="steps" class="control-label">Steps</label>
+                            <input type="number" id="steps" min="1" max="100" value="20" class="text-input">
+                        </section>
+                        <section class="control-group">
+                            <label for="cfg" class="control-label">CFG Scale</label>
+                            <input type="number" id="cfg" min="1" max="30" value="7" class="text-input">
+                        </section>
+                    </div>
+
+                    <section class="control-group">
+                        <label for="sampler_name" class="control-label">Sampler</label>
+                        <select id="sampler_name" class="select-input">
+                            <option value="euler">Euler</option>
+                            <option value="euler_ancestral">Euler A</option>
+                            <option value="dpmpp_sde">DPMPP SDE</option>
+                            <option value="dpmpp_sde_gpu">DPM2 A</option>
+                            <option value="lms">LMS</option>
+                            <option value="ddim">DDIM</option>
+                        </select>
+                    </section>
+
+                    <section class="control-group">
+                        <label for="denoise" class="control-label">Denoise (for KSampler)</label>
+                        <input type="range" id="denoise" min="0" max="1" step="0.01" value="1" oninput="updateSliderValue('denoise')">
+                        <span class="slider-value" id="denoise_value">1.00</span>
+                    </section>
+
+                    <section class="control-group">
+                        <label for="resolution" class="control-label">Resolution</label>
+                        <select id="resolution" class="select-input" onchange="toggleCustomResolution(this.value)">
+                            <option value="1344x768">1344x768 (Landscape)</option>
+                            <option value="768x1344">768x1344 (Portrait)</option>
+                            <option value="832x1248">832x1248 (Portrait)</option>
+                            <option value="1152x896">1152x896 (Landscape)</option>
+                            <option value="896x1152">896x1152 (Portrait)</option>
+                            <option value="1216x832">1216x832 (Landscape)</option>
+                            <option value="832x1216">832x1216 (Portrait)</option>
+                            <option value="1536x640">1536x640 (Landscape)</option>
+                            <option value="640x1536">640x1536 (Portrait)</option>
+                            <option value="1024x1024">1024x1024 (Square)</option>
+                            <option value="custom">Custom...</option>
+                        </select>
+                        <div id="custom-resolution-inputs" class="custom-inputs-row" style="display: none;">
+                            <input type="number" id="customWidth" placeholder="Width" min="1" class="text-input custom-res-input">
+                            <span class="x-separator">x</span>
+                            <input type="number" id="customHeight" placeholder="Height" min="1" class="text-input custom-res-input">
+                        </div>
+                    </section>
+                </div>
+            </details>
+
+            <details class="accordion-panel">
+                <summary class="accordion-summary">LoRA & Model Adjustments</summary>
+                <div class="accordion-content" id="lora-fields-container">
+                    <!-- LoRA fields will be dynamically added here -->
+                    <p class="no-loras-message">No LoRAs added yet. Click "Add LoRA" to begin.</p>
+                </div>
+                <button id="addLoraButton" class="action-button add-button">Add LoRA</button>
+            </details>
+
+            <details class="accordion-panel" id="faceDetailerSettingsPanel">
+                <summary class="accordion-summary">Face Detailer Settings</summary>
+                <div class="accordion-content">
+                    <section class="control-group">
+                        <label for="detailerGuideSize" class="control-label">Detailer Guide Size</label>
+                        <input type="number" id="detailerGuideSize" min="256" max="2048" step="64" value="1024" class="text-input">
+                    </section>
+                    <section class="control-group">
+                        <label for="detailerDenoise" class="control-label">Detailer Denoise</label>
+                        <input type="range" id="detailerDenoise" min="0" max="1" step="0.01" value="0.5" oninput="updateSliderValue('detailerDenoise')">
+                        <span class="slider-value" id="detailerDenoise_value">0.50</span>
+                    </section>
+                    <section class="control-group">
+                        <label for="detailerBboxThreshold" class="control-label">BBox Threshold</label>
+                        <input type="range" id="detailerBboxThreshold" min="0" max="1" step="0.01" value="0.5" oninput="updateSliderValue('detailerBboxThreshold')">
+                        <span class="slider-value" id="detailerBboxThreshold_value">0.50</span>
+                    </section>
+                    <section class="control-group">
+                        <label for="detailerSamHint" class="control-label">SAM Detection Hint</label>
+                        <select id="detailerSamHint" class="select-input">
+                            <option value="center-1">Center</option>
+                            <option value="top-left">Top-Left</option>
+                            <option value="top-right">Top-right</option>
+                            <option value="bottom-left">Bottom-Left</option>
+                            <option value="bottom-right">Bottom-Right</option>
+                            <option value="full">Full Image</option>
+                        </select>
+                    </section>
+                </div>
+            </details>
+        </aside>
+
+        <section class="image-display-area">
+            <div class="image-frame">
+                <img id="generatedImage" class="generated-image" alt="Generated Image" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+                <div id="imageLoadingOverlay" class="image-loading-overlay">
+                    <div class="spinner"></div>
+                    <p>Generating image...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <div class="container">
+            <p>&copy; 2024 ComfyGen Studio. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="/comfygen/js/app.js"></script>
+    <script>
+        // Helper functions for UI interactions
+        function toggleCustomResolution(value) {
+            const customInputs = document.getElementById("custom-resolution-inputs");
+            customInputs.style.display = value === "custom" ? "flex" : "none";
+        }
+
+        function updateSliderValue(id) {
+            const slider = document.getElementById(id);
+            const valueSpan = document.getElementById(id + '_value');
+            if (slider && valueSpan) {
+                valueSpan.innerText = parseFloat(slider.value).toFixed(2); // Format to 2 decimal places
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initial slider value updates
+            updateSliderValue('denoise');
+            updateSliderValue('detailerDenoise');
+            updateSliderValue('detailerBboxThreshold');
+
+            // Local Storage for all inputs
+            const inputs = document.querySelectorAll('.text-input, .select-input, .checkbox-input, input[type="range"]');
+            inputs.forEach(input => {
+                const savedValue = localStorage.getItem(input.id);
+                if (savedValue !== null) {
+                    if (input.type === 'checkbox') {
+                        input.checked = (savedValue === 'true');
+                    } else {
+                        input.value = savedValue;
+                    }
+                }
+                input.addEventListener('input', () => {
+                    localStorage.setItem(input.id, input.type === 'checkbox' ? input.checked : input.value);
+                });
+                input.addEventListener('change', () => { // For selects and ranges
+                    localStorage.setItem(input.id, input.type === 'checkbox' ? input.checked : input.value);
+                });
+            });
+
+            // Theme Toggle Logic
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const body = document.body;
+
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                body.classList.add(savedTheme);
+                themeToggleBtn.innerHTML = savedTheme === 'light-mode' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                body.classList.add('light-mode');
+                themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+
+            themeToggleBtn.addEventListener('click', () => {
+                if (body.classList.contains('light-mode')) {
+                    body.classList.remove('light-mode');
+                    localStorage.setItem('theme', 'dark-mode');
+                    themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
+                } else {
+                    body.classList.add('light-mode');
+                    localStorage.setItem('theme', 'light-mode');
+                    themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+                }
+            });
+
+            // Face Detailer Settings Panel visibility based on faceDetailerToggle
+            const faceDetailerToggle = document.getElementById('faceDetailerToggle');
+            const faceDetailerSettingsPanel = document.getElementById('faceDetailerSettingsPanel');
+
+            function updateFaceDetailerSettingsVisibility() {
+                faceDetailerSettingsPanel.style.display = faceDetailerToggle.checked ? 'block' : 'none';
+            }
+            faceDetailerToggle.addEventListener('change', updateFaceDetailerSettingsVisibility);
+            updateFaceDetailerSettingsVisibility(); // Set initial visibility
+        });
+    </script>
+</body>
+</html>
